@@ -14,19 +14,17 @@ This is the basic version for the demo. Sections 1–10 below are the full plan 
 
 | Item | Demo version |
 |---|---|
-| Data | **1 month** of NYC Yellow Taxi trips (Jan 2024, ~3M rows, ~48 MB Parquet), zone lookup CSV, weather JSON (1 month) |
+| Theme | **Smart City NYC**: mobility, citizen services, environment, live traffic |
+| Data | Taxi trips Jan 2024 (Parquet, ~3M rows) + zone lookup (CSV) + 311 service requests Jan 2024 (CSV via Socrata API, ~250k rows) + air quality and weather (Open-Meteo JSON APIs) + live traffic speeds (NYC DOT real-time JSON API) |
 | Run mode | **Google Colab** (or any laptop), local mode. Cluster comparison = `local[1]` vs `local[2]` vs `local[*]` (no Docker/K8s) |
 | Code | **One notebook**: `notebooks/Spark_DataFrames_CaseStudy.ipynb`, runs the 7 steps top to bottom and downloads the data itself |
-| Queries | 7: hourly demand (+ SQL version), top zones (join), fare per mile by borough, tips by payment, top 3 zones per borough (window), weekly heatmap (pivot), weather impact (join with API data) |
+| Queries | 10: hourly taxi demand (+ SQL), mobility hubs (join), weekly heatmap (pivot), top 311 complaints, agency resolution time (percentile), top complaints per borough (window), taxi traffic vs air pollution (corr), temperature vs heating complaints, live road speeds, borough scorecard from 4 sources |
 | Optimizations | 5: cache, broadcast join, shuffle partitions, AQE, CSV vs Parquet |
 | Pandas | Same job timed in Pandas vs Spark at 0.1M / 0.5M / 1M / 3M rows |
 | Frontend | None. Notebook + Spark UI screenshots |
-| Runtime | About 2–3 minutes end to end |
+| Runtime | About 5 minutes end to end (mostly the 311 download) |
 
-Input files go in `data/raw/`:
-- `yellow_tripdata_2024-01.parquet`
-- `taxi_zone_lookup.csv`
-- `weather_nyc_2024-01.json`
+The notebook downloads every input into `data/raw/` itself; the taxi, zone and weather files are also committed.
 
 ---
 
