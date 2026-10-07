@@ -288,7 +288,7 @@ parallelism on one machine. The same code would run on a cluster by changing onl
 |---|---|---|---|
 | Taxi trips | Direct file download | `spark.read.parquet(path)` | Parquet carries its own schema, so no schema needed |
 | Zones | Direct file download | `spark.read.csv(path, header=True, schema=zone_schema)` | **Explicit schema** with `StructType` |
-| 311 | Socrata API in **pages of 100,000 rows** (`$limit`, `$offset`), one CSV file per page | `spark.read.csv(folder, ...)` reads **all files in the folder as one DataFrame** | Reading many files in parallel; explicit schema |
+| 311 | Socrata API in **pages of 100,000 rows** (`$limit`, `$offset`), one CSV file per page | `spark.read.csv(folder, ...)` reads **all files in the folder as one DataFrame**. The `multiLine` and `escape` options handle complaint text that contains commas, quotes or line breaks | Reading many files in parallel; explicit schema |
 | Air quality, weather | API returns JSON | `spark.read.option("multiLine", True).json(path)`, then `arrays_zip` + `explode` | **Flattening nested JSON** into rows |
 | Live traffic | API called **on every run**, saved with a timestamp in the file name | `spark.read.option("multiLine", True).json(path)` | **Real-time data**; falls back to the last saved snapshot if offline |
 
@@ -467,7 +467,7 @@ reusable outputs, not just printouts.
 |---|---|---|
 | **7a. Speed-up chart** | Baseline vs optimized bars for O1–O5, with the speed-up factor | Which optimizations matter most for this data |
 | **7b. Pandas vs Spark** | The same job (read file → filter → trips and average fare per hour) at 100k, 500k, 1M and ~3M rows, in both tools. Also how much RAM Pandas needs for the full month (~420 MB, versus a 50 MB file) | **Pandas is faster on small data**, because Spark has a fixed start-up cost to plan and schedule tasks. As data grows, Spark catches up (in our runs, about even at 3M rows). Pandas must hold everything in one machine's memory; Spark can spill to disk and scale out to a cluster with the same code. |
-| **7c. Scaling with cores** | The same pipeline with `local[1]`, `local[2]` and `local[*]`, restarting Spark each time | More cores → faster, but not perfectly (for example 1.3–1.6x on 4 cores). Part of every job is fixed overhead or reading the file, which does not speed up (*Amdahl's law*). This stands in for "compare performance across cluster modes" without needing a real cluster. |
+| **7c. Scaling with cores** | The same pipeline with `local[1]`, `local[2]` and `local[*]`, restarting Spark each time | More cores → faster, but not perfectly (about 1.3–1.8x on 4 cores in our runs). Part of every job is fixed overhead or reading the file, which does not speed up (*Amdahl's law*). This stands in for "compare performance across cluster modes" without needing a real cluster. |
 | **7d. Smart city insights** | Prints the key findings computed from the query results | Peak hour, busiest hub, top complaint, fastest and slowest agency, the correlations, the slowest borough right now |
 | **7e. Summary** | All measured numbers in one place | Ready to copy into the report |
 
