@@ -15,13 +15,13 @@ This is the basic version for the demo. Sections 1–10 below are the full plan 
 | Item | Demo version |
 |---|---|
 | Data | **1 month** of NYC Yellow Taxi trips (Jan 2024, ~3M rows, ~48 MB Parquet), zone lookup CSV, weather JSON (1 month) |
-| Run mode | Local mode only. Cluster comparison = `local[1]` vs `local[*]` (no Docker/K8s) |
-| Code | `src/pipeline.py` + **one notebook** `notebooks/case_study.ipynb` that runs the 7 steps top to bottom |
-| Queries | 6: hourly demand, top zones (join), fare by borough, tip % by payment, top zone per borough (window), weather impact (join with API data) |
-| Optimizations | 4: cache, broadcast join, shuffle partitions (200 vs 8), CSV vs Parquet |
-| Pandas | One query timed in Pandas vs Spark |
+| Run mode | **Google Colab** (or any laptop), local mode. Cluster comparison = `local[1]` vs `local[2]` vs `local[*]` (no Docker/K8s) |
+| Code | **One notebook**: `notebooks/Spark_DataFrames_CaseStudy.ipynb`, runs the 7 steps top to bottom and downloads the data itself |
+| Queries | 7: hourly demand (+ SQL version), top zones (join), fare per mile by borough, tips by payment, top 3 zones per borough (window), weekly heatmap (pivot), weather impact (join with API data) |
+| Optimizations | 5: cache, broadcast join, shuffle partitions, AQE, CSV vs Parquet |
+| Pandas | Same job timed in Pandas vs Spark at 0.1M / 0.5M / 1M / 3M rows |
 | Frontend | None. Notebook + Spark UI screenshots |
-| Runtime | A few minutes end to end |
+| Runtime | About 2–3 minutes end to end |
 
 Input files go in `data/raw/`:
 - `yellow_tripdata_2024-01.parquet`
