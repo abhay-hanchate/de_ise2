@@ -4,6 +4,30 @@
 
 This plan covers all 7 practical steps, all 5 evaluation criteria and all 3 bonus items.
 
+**Team:** Varun Murugan (124A8118) · Rankin Yanu (124A8124) · Navin Nadar (225A8134) · Abhay Hanchate (225A8129)
+
+---
+
+## 0. DEMO SCOPE (what we are actually building)
+
+This is the basic version for the demo. Sections 1–10 below are the full plan for reference only.
+
+| Item | Demo version |
+|---|---|
+| Data | **1 month** of NYC Yellow Taxi trips (Jan 2024, ~3M rows, ~48 MB Parquet), zone lookup CSV, weather JSON (1 month) |
+| Run mode | Local mode only. Cluster comparison = `local[1]` vs `local[*]` (no Docker/K8s) |
+| Code | `src/pipeline.py` + **one notebook** `notebooks/case_study.ipynb` that runs the 7 steps top to bottom |
+| Queries | 6: hourly demand, top zones (join), fare by borough, tip % by payment, top zone per borough (window), weather impact (join with API data) |
+| Optimizations | 4: cache, broadcast join, shuffle partitions (200 vs 8), CSV vs Parquet |
+| Pandas | One query timed in Pandas vs Spark |
+| Frontend | None. Notebook + Spark UI screenshots |
+| Runtime | A few minutes end to end |
+
+Input files go in `data/raw/`:
+- `yellow_tripdata_2024-01.parquet`
+- `taxi_zone_lookup.csv`
+- `weather_nyc_2024-01.json`
+
 ---
 
 ## 1. Key decisions (summary)
